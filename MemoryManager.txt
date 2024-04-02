@@ -1,0 +1,74 @@
+.TH
+.SH NAME
+P2 - Memory Management and Layering 
+.SH SYNOPSIS
+Learn how to use a data structure to manage a block of memory and be able to allocate and free memory without leaks.
+.SH DESCRIPTION
+/home/reptilian/p2/MemoryManager/MemoryManager.h
+.RS
+It includes an object called Chunk which was used to keep track of memory through a vector of chunks. Chunks have variables of offset, length, and isHole. In my MemoryManager class, I had variables for the memory block, the block size, the word size, the allocator function, the vector of chunks, and a boolean called initialized. After that is prototypes for all the functions given in the project specification.
+.RE
+
+/home/reptilian/p2/MemoryManager/MemoryManager.cpp
+.RS
+This file includes all the definitions for all the functions.
+.RE
+
+.RS
+For bestFit, I had to iterate through each hole to find one large enough for sizeInWords and the smallest. For worstFit, I did the same but for the largest hole.
+.RE
+.RS
+For the constructor, I set the given wordSize and allocator function.
+.RE
+.RS
+For the destructor, I called shutdown().
+.RE
+.RS
+For initialize, I created a new memory block with the given size and added a new hole chunk to my data structure.
+.RE
+.RS
+For shutdown, I deleted the memory block and cleared the data structure.
+.RE
+.RS
+For allocate, I converted the given sizeInBytes to the number of words allocated, then found the offset using the allocator. Then I found the hole in the data structure and determined if it needed to be shortened.
+.RE
+.RS
+For free, I found the offset of the address given. Then I determined if the chunks to the left and right of new hole were also holes and merged them accordingly.
+.RE
+.RS
+For setAllocator, I set the passed in allocator function.
+.RE
+.RS
+For dumpMemoryMap, I opened a file descriptor, then iterated through the list of holes to format a string as specified in the project specification. Then I wrote that string using POSIX calls.
+.RE
+.RS
+For getList, I iterated through all the chunks to find which ones were holes and then formatted an array according to the project specification.
+.RE
+.RS
+For getBitMap, I iterated through all the chunks to record bits for non-holes and holes for the length of the chunk. Then I made sure the length of those bits was a multiple of 8. Then I reversed the order of each 8 bit segment. Finally, I converted each 8 bit segment into a byte using left shifts and added them to a bit stream array.
+.RE
+.RS
+For getWordSize, I returned wordSize.
+.RE
+.RS
+For getMemeoryStart, I returned the pointer to the memory block.
+.RE
+.RS
+For getMemoryLimit, I returned the block size.
+.RE
+
+/home/reptilian/p2/MemoryManager/Makefile
+.RS
+I wrote a simple makefile that compiles the above files and creates a library as to run the given test file. 
+.RE
+.SH TESTING
+To test, I would run the command: "cd MemoryManager && make && cd .. && c++ -std=c++17 -o test CommandLineTest.cpp -L ./MemoryManager -lMemoryManager && valgrind ./test".
+Which would run the makefile, compile the test, and run it through valgrind.
+.SH BUGS
+No known bugs.
+.SH LINK
+https://youtu.be/dqkAs5fYiQo
+.SH REFERENCES/CITATIONS
+A lot of help from Ernesto.
+.SH AUTHOR
+Matthew Kopelowitz
